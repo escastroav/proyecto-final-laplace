@@ -1,14 +1,20 @@
-//#include "laplace.h"
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <omp.h>
+#include "papi.h"
+
+
+//para compilar usar: 
+// g++ -std=c++11 laplace-cz.cpp -fopenmp
 
 
 // constants
 const double DELTA = 0.1;
-const double L = 2.0; 
+const double L = 10.0; 
 const int N = int(L/DELTA)+1;
-const int STEPS = 200;
+const int STEPS = 100;
+
 
 typedef std::vector<double> Matrix;
 
@@ -19,20 +25,39 @@ void print(const Matrix & m);
 void init_gnuplot(void);
 void plot_gnuplot(const Matrix & m);
 
+void PAPI_measure_Init(int retval, float & ireal_time, float & iproc_time, float & imflops, long long & iflpops);
+void PAPI_measure_Final(int retval, float & real_time, float & proc_time, float & mflops, long long & flpops);
 
-int main(void)
+
+
+
+int main(int argc, char ** argv)
 {
+  const int nucleos = std::atoi(argv[1]);
   Matrix data(N*N);
+
+  float real_time, proc_time,mflops =0.0 ;
+  long long flpops =0.0;
+  float ireal_time , iproc_time, imflops =0.0 ;
+  long long iflpops=0.0;
+  int retval=0; 
+ 
+  
+  //Funciones para definir condiciones del espacio a estudiar  
   initial_conditions(data);
   boundary_conditions(data);
-
-  //evolve(data);
-  //print(data);
-  
   init_gnuplot();
+  omp_set_num_threads(nucleos);
+
+  
   for (int istep = 0; istep < STEPS; ++istep) {
+    //LLAMADO DE FUNCIONES DENTRO DE PAPI
+      PAPI_measure_Init(retval, ireal_time, iproc_time, imflops, iflpops);
     evolve(data);
-    plot_gnuplot(data);
+      PAPI_measure_Final(retval, real_time, proc_time, mflops, flpops);   
+    //plot_gnuplot(data);
+    // plot_papi();
+    
   }
   
   return 0;
@@ -78,6 +103,9 @@ void boundary_conditions(Matrix & m)
 
 void evolve(Matrix & m)
 {
+
+  
+#pragma omp parallel for
   for(int ii=0; ii<N; ++ii) {
     for(int jj=0; jj<N; ++jj) {
       // check if boundary
