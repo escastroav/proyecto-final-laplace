@@ -51,10 +51,17 @@ void boundary_conditions(Matrix & m)
 {
   int ii = 0, jj = 0;
 
-  ii = 0;
+
+  ii=0;  //barra a portencial 100
+  //ii = N*0.25;
   for (jj = 0; jj < N; ++jj)
     m[ii*N + jj] = 100;
 
+  ii = N*0.75; //barra a potencial -100 //posición Vertical
+  for (jj = int(N*0.25); jj < int(N*0.75)+1; ++jj) //posicion horizontal
+    m[ii*N + jj] = -100;
+
+  
   ii = N-1;
   for (jj = 0; jj < N; ++jj)
     m[ii*N + jj] = 0;
@@ -76,6 +83,7 @@ void evolve(Matrix & m)
       // check if boundary
       if(ii == 0) continue;
       if(ii == N-1) continue;
+      if(ii == int(N*0.75))continue;
       if(jj == 0) continue;
       if(jj == N-1) continue;
       // evolve non boundary
