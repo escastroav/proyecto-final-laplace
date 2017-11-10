@@ -1,42 +1,4 @@
-//#include "laplace.h"
-#include <iostream>
-#include <vector>
-#include <cmath>
-
-
-// constants
-const double DELTA = 0.1;
-const double L = 2.0; 
-const int N = int(L/DELTA)+1;
-const int STEPS = 200;
-
-typedef std::vector<double> Matrix;
-
-void initial_conditions(Matrix & m);
-void boundary_conditions(Matrix & m);
-void evolve(Matrix & m);
-void print(const Matrix & m);
-void init_gnuplot(void);
-void plot_gnuplot(const Matrix & m);
-
-
-int main(void)
-{
-  Matrix data(N*N);
-  initial_conditions(data);
-  boundary_conditions(data);
-
-  //evolve(data);
-  //print(data);
-  
-  init_gnuplot();
-  for (int istep = 0; istep < STEPS; ++istep) {
-    evolve(data);
-    plot_gnuplot(data);
-  }
-  
-  return 0;
-}
+#include "laplace.h"
 
 void initial_conditions(Matrix & m)
 {
@@ -75,7 +37,6 @@ void boundary_conditions(Matrix & m)
     m[ii*N + jj] = 0;
 }
 
-
 void evolve(Matrix & m)
 {
   for(int ii=0; ii<N; ++ii) {
@@ -96,9 +57,6 @@ void evolve(Matrix & m)
   }
 }
 
-
-
-
 void print(const Matrix & m)
 {
   for(int ii=0; ii<N; ++ii) {
@@ -108,7 +66,6 @@ void print(const Matrix & m)
     std::cout << "\n";
   }  
 }
-
 
 void init_gnuplot(void)
 {
