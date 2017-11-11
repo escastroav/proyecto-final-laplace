@@ -12,7 +12,7 @@
 const double DELTA = 0.1;
 const double L = 10.0; 
 const int N = int(L/DELTA)+1;
-const int STEPS = 500;
+const int STEPS = 100;
 typedef std::vector<double> Matrix;
 
 //Definición Funciones
