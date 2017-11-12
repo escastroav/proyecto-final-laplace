@@ -5,7 +5,7 @@
 #include "papi.h"
 
 //para compilar usar: 
-// g++ -I $HOME/local/include -Wl,-rpath=$HOME/local/lib -std=c++11 -L $HOME/local/lib -lpapi laplace-cz.cpp -fopenmp -L $HOME/local/lib -lpapi
+// g++ -I $HOME/local/include -Wl,-rpath=$HOME/local/lib -std=c++11 laplace-cz.cpp -fopenmp -L $HOME/local/lib -lpapi
 
 
 // constants
